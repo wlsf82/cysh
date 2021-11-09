@@ -4,7 +4,7 @@ cd $1
 # Initialize git and .gitignore
 git init
 touch .gitignore
-echo ".DS_Store\ncypress.env.json\ncypress/screenshots/\ncypress/videos/\nnode_modules/" > .gitignore
+echo ".DS_Store\ncypress.env.json\ncypress/downloads/\ncypress/screenshots/\ncypress/videos/\nnode_modules/" > .gitignore
 # Create readme file to be defined
 touch README.md
 echo "# $1\n\nTBD." > README.md
