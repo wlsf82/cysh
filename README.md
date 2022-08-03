@@ -7,7 +7,7 @@ This project offers a single shell script that quickly initializes a [Cypress](h
 ## Usage
 
 1. Download the [`cy.sh`](./cy.sh) file and move it to your root directory
-2. In the root directory, run `./cy.sh name-of-your-project-here` to create a Cypress project from scratch
+2. In the root directory, run `./cy.sh name-of-your-project-here` to create a Cypress project from scratch (you might have to first give execution permission to the `cy.sh` file)
 - 2.1. Alternatively, you can run `./cy.sh name-of-your-project-here x.x.x` if you want to install a specific version of Cypress, other than its latest version.
 3. Close Cypress and access the newly created project (e.g., `cd name-of-your-project-here/`)
 4. Open it on your favorite IDE and start writing your Cypress tests
