@@ -21,6 +21,31 @@ touch cypress.env.json
 echo "{}" > cypress.env.json
 touch cypress.env.example.json
 echo "{}" > cypress.env.example.json
+# Create the cypress.config.js file with a basic configuration for e2e tests
+cat > cypress.config.js << 'EOF'
+const { defineConfig } = require('cypress')
+
+module.exports = defineConfig({
+  e2e: {
+    fixturesFolder: false,
+    supportFile: false,
+  },
+})
+EOF
+# Create a sample test file just with a test suite skeleton
+mkdir cypress/
+mkdir cypress/e2e/
+cat > cypress/e2e/spec.cy.js << 'EOF'
+describe('Sample Test Suite', () => {
+  beforeEach(() => {
+    // cy.visit('url-here')
+  })
+
+  it('works', () => {
+    // add test logic here
+  })
+})
+EOF
 # Version and commit all the files and directories
 git add .
 git commit -m "Create cypress project"
