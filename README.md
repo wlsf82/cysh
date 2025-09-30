@@ -15,7 +15,7 @@ This project offers a single shell script that quickly initializes a [Cypress](h
 
 ## What does `cy.sh` do?
 
-To understand exactly what it does, read the comments in the [cy.sh](./cy.sh) file.
+To understand exactly what it does, read the comments in the [`cy.sh`](./cy.sh) file.
 
 ## Support this project
 
