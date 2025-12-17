@@ -46,6 +46,24 @@ describe('Sample Test Suite', () => {
   })
 })
 EOF
+# Create a basic GitHub Actions workflow to run the tests
+mkdir .github/
+mkdir .github/workflows
+touch .github/workflows/ci.yml
+cat > .github/workflows/ci.yml << 'EOF'
+name: End-to-end tests 🧪
+on: push
+jobs:
+  cypress-run:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      # Install npm dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+EOF
 # Version and commit all the files and directories
 git add .
 git commit -m "Create cypress project"
