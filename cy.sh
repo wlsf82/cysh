@@ -5,12 +5,64 @@ cd workspaces/$1
 git init
 touch .gitignore
 echo ".DS_Store\ncypress.env.json\ncypress/downloads/\ncypress/screenshots/\ncypress/videos/\nnode_modules/" > .gitignore
-# Create a readme file to be defined
+# Link local repository with the remote one
+git remote add origin git@github.com:wlsf82/$1.git
+# Create a readme file with a GitHub Actions badge
 touch README.md
-echo "# $1\n\nTBD." > README.md
+cat > README.md << EOF
+# $1
+
+[![CI](https://github.com/wlsf82/$1/actions/workflows/ci.yml/badge.svg)](https://github.com/wlsf82/$1/actions/workflows/ci.yml)
+EOF
 # Initialize npm
-npm init -y
-# Install Cypress (if the version is provided, it will install it, otherwise, the latestet version is installed)
+touch package.json
+cat > package.json << EOF
+{
+  "name": "$1",
+  "version": "1.0.0",
+  "description": "TBD.",
+  "main": "cypress.config.js",
+  "scripts": {
+    "cy:open": "cypress open",
+    "test": "cypress run"
+  },
+  "keywords": [
+    "cypress",
+    "talking-about-testing",
+    "testing"
+  ],
+  "author": "Walmyr <wlsf82@gmail.com> (https://walmyr.dev/)",
+  "license": "MIT",
+  "type": "commonjs"
+}
+EOF
+# Add the MIT license file
+touch LICENSE
+CURRENT_YEAR=$(date +%Y)
+cat > LICENSE << EOF
+MIT License
+
+Copyright (c) $CURRENT_YEAR Walmyr
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+EOF
+# Install Cypress (if the version is provided, install it, otherwise, install the latestet version)
 if [ "$2" ]; then
   npm i cypress@"$2" -D
 else
@@ -21,7 +73,7 @@ touch cypress.env.json
 echo "{}" > cypress.env.json
 touch cypress.env.example.json
 echo "{}" > cypress.env.example.json
-# Create the cypress.config.js file with a basic configuration for e2e tests
+# Create the cypress.config.js file with a basic configuration for E2E tests
 cat > cypress.config.js << 'EOF'
 const { defineConfig } = require('cypress')
 
