@@ -6,13 +6,13 @@ git init
 touch .gitignore
 echo ".DS_Store\ncypress.env.json\ncypress/downloads/\ncypress/screenshots/\ncypress/videos/\nnode_modules/" > .gitignore
 # Link local repository with the remote one
-git remote add origin git@github.com:wlsf82/$1.git
+git remote add origin git@github.com:${3:-wlsf82}/$1.git
 # Create a readme file with a GitHub Actions badge
 touch README.md
 cat > README.md << EOF
 # $1
 
-[![CI](https://github.com/wlsf82/$1/actions/workflows/ci.yml/badge.svg)](https://github.com/wlsf82/$1/actions/workflows/ci.yml)
+[![CI](https://github.com/${3:-wlsf82}/$1/actions/workflows/ci.yml/badge.svg)](https://github.com/${3:-wlsf82}/$1/actions/workflows/ci.yml)
 EOF
 # Initialize npm
 touch package.json
