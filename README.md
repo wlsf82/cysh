@@ -28,7 +28,7 @@ Examples:
 ./cy.sh my-repo 15.8.1 my-gh-user
 ```
 
-3. After the script is executed, access the newly created directory and start working on it.
+3. After the script is executed, access the newly created project and start working on it.
 
 ## What does `cy.sh` do?
 
