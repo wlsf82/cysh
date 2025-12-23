@@ -2,7 +2,15 @@
 
 This project offers a single shell script that quickly initializes a [Cypress](https://cypress.io) testing automation project from scratch.
 
-> **Note:** This script only works on Unix-based operating systems, such as Linux and OSX.
+> **Notes:**
+>
+> - This script only works on Unix-based operating systems, such as Linux and OSX.
+>
+> - The script expects a `workspaces/` directory at the same root where you run it, otherwise, it will fail. If you don't have it, create it before running the script:
+>
+> ```bash
+> mkdir workspaces
+> ```
 
 ## Usage
 
