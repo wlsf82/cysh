@@ -83,6 +83,10 @@ module.exports = defineConfig({
     fixturesFolder: false,
     supportFile: false,
   },
+  retries: {
+    openMode: 0,
+    runMode: 2,
+  },
 })
 EOF
 # Create a sample test file just with a test suite skeleton
