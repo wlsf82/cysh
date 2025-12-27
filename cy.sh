@@ -1,3 +1,4 @@
+
 # Create the project directory and access it
 mkdir workspaces/$1
 cd workspaces/$1
@@ -115,6 +116,13 @@ jobs:
       # and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v6
+      - name: Save screenshots in case of failures
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          if-no-files-found: ignore
 EOF
 # Version and commit all the files and directories
 git add .
