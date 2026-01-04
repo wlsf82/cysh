@@ -101,17 +101,17 @@ describe('Sample Test Suite', () => {
 })
 EOF
 # Create the support directory with the e2e and commands files in it
-mkdir cypress/support
+mkdir cypress/support/
 touch cypress/support/e2e.js
 touch cypress/support/commands.js
 echo "import './commands'" > cypress/support/e2e.js
 # Create the fixtures directory with an empty json file in it
-mkdir cypress/fixtures
+mkdir cypress/fixtures/
 touch cypress/fixtures/example.json
 echo "{}" > cypress/fixtures/example.json
 # Create a basic GitHub Actions workflow to run the tests
 mkdir .github/
-mkdir .github/workflows
+mkdir .github/workflows/
 touch .github/workflows/ci.yml
 cat > .github/workflows/ci.yml << 'EOF'
 name: End-to-end tests 🧪
