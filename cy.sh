@@ -79,6 +79,7 @@ cat > cypress.config.js << 'EOF'
 const { defineConfig } = require('cypress')
 
 module.exports = defineConfig({
+  allowCypressEnv: false,
   e2e: {},
   retries: {
     openMode: 0,
