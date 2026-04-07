@@ -1227,7 +1227,7 @@ This guide covers best practices for writing Cypress component tests using `cy.m
 
 Component test specs live alongside the component source code, not inside the `cypress/e2e/` directory. Use the `cy.jsx` or `.cy.tsx` extension.
 
-```
+```bash
 src/
   components/
     ChatMessage/
