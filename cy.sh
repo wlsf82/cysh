@@ -1,4 +1,3 @@
-
 # Create the project directory and access it
 mkdir workspaces/$1
 cd workspaces/$1
@@ -170,6 +169,10 @@ Assertion strategies and patterns, including when to use `.should('be.visible')`
 ### 🎨 [07. Code Quality](./cypress/07-code-quality.md)
 
 Code quality standards covering sensitive data handling, conditional testing rules, import organization, indentation standards, and npm script conventions.
+
+### [08. Component Testing](./cypress/08-component-testing.md)
+
+Read when writing or refactoring component tests with `cy.mount()`. Covers spec file placement, mounting with providers/routers, and intercepting API calls in component tests.
 
 ## Navigation Tips
 
@@ -1209,15 +1212,152 @@ npm already knows where to find the binaries when calling scripts defined inside
 - [Authentication](./03-authentication.md) - Using sensitive credentials
 - [Commands](./05-commands.md) - Writing deterministic tests
 EOF
+# Create the 08-component-testing.md file with detailed instructions on how to write Cypress component tests using `cy.mount()`, including best practices for spec file placement, mounting components with providers, and intercepting API calls in component tests.
+mkdir -p .github/cypress/
+touch .github/cypress/08-component-testing.md
+cat > .github/cypress/08-component-testing.md << 'EOF'
+# Cypress Component Testing
+
+> **Part of:** [Cypress Instructions](../copilot-instructions.md)
+
+This guide covers best practices for writing Cypress component tests using `cy.mount()`.
+
+## Spec File Placement
+
+Component test specs live alongside the component source code, not inside the `cypress/e2e/` directory. Use the `cy.jsx` or `.cy.tsx` extension.
+
+```
+src/
+  components/
+    ChatMessage/
+      ChatMessage.jsx        # Component source
+      ChatMessage.cy.jsx     # Component test spec
+```
+
+The `specPattern` for component tests is configured in `cypress.config.js`:
+
+```js
+component: {
+  specPattern: "src/**/*.cy.{js,jsx}",
+  devServer: {
+    framework: "react",
+    bundler: "vite",
+  },
+},
+```
+
+## Mounting Components
+
+Use `cy.mount()` to render a component in isolation. Pass props directly.
+
+```js
+import React from 'react'
+import { MyComponent } from './MyComponent'
+
+describe('<MyComponent />', () => {
+  it('renders with default props', () => {
+    cy.mount(<MyComponent />)
+
+    cy.contains('Expected text').should('be.visible')
+  })
+
+  it('renders with custom props', () => {
+    cy.mount(<MyComponent title="Custom" count={5} />)
+
+    cy.contains('Custom').should('be.visible')
+  })
+})
+```
+
+## Wrapping with Providers and Routers
+
+Components that depend on React context (e.g., `MemoryRouter`, theme providers) must be wrapped when mounting:
+
+```typescript
+import React from 'react'
+import { MemoryRouter } from 'react-router-dom'
+import { ChatView } from './ChatView'
+
+describe('<ChatView />', () => {
+  it('renders the chat UI', () => {
+    cy.mount(
+      <MemoryRouter>
+        <ChatView />
+      </MemoryRouter>
+    )
+
+    cy.get('[data-testid="question-input"]').should('be.visible')
+  })
+})
+```
+
+## Intercepting API Calls
+
+Component tests can use `cy.intercept()` just like E2E tests. Set up intercepts in `beforeEach` before mounting:
+
+```js
+describe('<ChatView />', () => {
+  beforeEach(() => {
+    cy.intercept('GET', '/api/models', {
+      statusCode: 200,
+      body: { api: { submodels: ['commands'] } },
+    }).as('getModels')
+
+    cy.intercept('GET', '/health', {
+      statusCode: 200,
+      body: { status: 'ok' },
+    }).as('healthCheck')
+  })
+
+  it('renders with mocked data', () => {
+    cy.mount(
+      <MemoryRouter>
+        <ChatView />
+      </MemoryRouter>
+    )
+
+    cy.get('[data-testid="question-input"]').should('be.visible')
+  })
+})
+```
+
+## Key Differences from E2E Tests
+
+- **No `cy.visit()`** — components are rendered via `cy.mount()`, not by navigating to a URL.
+- **No `cy.sessionLogin()` or `cy.login()`** — component tests run in isolation. Mock auth context if needed.
+- **Import the component directly** — use relative imports from the spec file to the component source.
+- **Assertions and selectors** — all the same rules apply (AAA pattern, `data-testid`, `.should('be.visible')`, etc.).
+
+## See Also
+
+- [Test Organization](./02-test-organization.md) - AAA pattern and `context()` blocks
+- [Selectors](./04-selectors.md) - Selector strategy
+- [Assertions](./06-assertions.md) - Assertion best practices
+EOF
 # Create the cypress-automation skill file with a concise summary of core principles and rules for writing Cypress tests in this project, organized into focused topic areas with cross-references to the detailed topic files in the copilot-instructions.md. The skill file should cover project structure, test organization, authentication, selectors, commands, assertions, and code quality standards in a concise format suitable for quick reference by developers.
 mkdir -p .github/skills/cypress-automation/
 touch .github/skills/cypress-automation/SKILL.md
 cat > .github/skills/cypress-automation/SKILL.md << 'EOF'
+---
+name: cypress-automation
+description: "Expert rules for Cypress E2E and component test automation: selector strategy (data-testid over aria-label), no arbitrary waits (use cy.intercept and cy.wait with alias), AAA pattern, visibility over existence, API-based auth with cy.sessionLogin(). Use when writing or refactoring Cypress tests, debugging flaky tests, choosing selectors, setting up test setup/teardown, implementing authenticated test flows, or writing component tests with cy.mount. Triggers: Cypress, e2e test, component test, selector, flaky test, cy.session, cy.intercept, cy.mount."
+---
+
 # Skill: Cypress Automation Expert
 
-You are an expert in web test automation using Cypress + TypeScript/JavaScript. Your goal is to write high-quality, deterministic, and maintainable end-to-end tests.
+You are an expert in web test automation using Cypress + JavaScript/TypeScript. Your goal is to write high-quality, deterministic, and maintainable E2E and component tests.
 
-> **Note:** For detailed implementation guidance, examples, and code snippets, refer to the [Cypress Instructions](../../copilot-instructions.md) - a comprehensive guide organized into focused topics.
+## When to Read Detailed Instructions
+
+For detailed implementation guidance, code snippets, and extended examples, read from the [Cypress Instructions](../../copilot-instructions.md) topic files based on the task:
+
+- **Setting up a new test file or project** → Read [01-project-structure.md](../../cypress/01-project-structure.md) and [02-test-organization.md](../../cypress/02-test-organization.md)
+- **Implementing login or authentication** → Read [03-authentication.md](../../cypress/03-authentication.md)
+- **Choosing selectors or reducing duplication** → Read [04-selectors.md](../../cypress/04-selectors.md)
+- **Using cy.request, cy.wait, cy.intercept, or .last()** → Read [05-commands.md](../../cypress/05-commands.md)
+- **Writing or debugging assertions** → Read [06-assertions.md](../../cypress/06-assertions.md)
+- **Reviewing code quality, imports, or sensitive data handling** → Read [07-code-quality.md](../../cypress/07-code-quality.md)
+- **Writing component tests with cy.mount** → Read [08-component-testing.md](../../cypress/08-component-testing.md)
 
 ## Core Principles
 
@@ -1229,22 +1369,133 @@ You are an expert in web test automation using Cypress + TypeScript/JavaScript. 
 
 - **No Arbitrary Waits:** `cy.wait(Number)` is strictly forbidden. Use `cy.intercept()` + `cy.wait('@alias')`
 - **No XPath:** Never use XPath selectors
-- **Selector Priority:** `[data-testid]` > `HTML tag + Tag's content` > `[aria-label]` > `[placeholder]` > `#id` > descriptive class names (e.g., `.submit-button`) > class with static + dynamic parts (e.g., `[class^="foo-"]` || `[class*=" -ooba-"]`) || `class$="-bar"]` > `:nth-child()` || `:nth-of-type()`
+- **Selector Priority:** `[data-testid]` > `[aria-label]` > descriptive attributes (e.g., `placeholder`) > `#id`
 - **Visibility over Existence:** Use `.should('be.visible')` not `.should('exist')`
-- **Session Caching:** Use `cy.sessionLogin()` for authenticated tests (except login specs)
+- **Auth via API:** Use `cy.sessionLogin()` for authenticated E2E tests (except login specs). This performs an API-based login, not a UI-based one.
 
 ## Essential Patterns
 
 - Use **`beforeEach`** for setup. Avoid `before`, `after`, `afterEach`
 - Use **`context()`** to organize sub-features within `describe()` blocks
 - Use **`.as('alias')`** to avoid selector repetition
-- Always **destructure** in `.then()` callbacks: `{ body, status }` not `response.body`
+- Always **destructure** in `.then()` callbacks: `{ body, status }` for `cy.request()`, `{ response }` for `cy.wait('@alias')`
 - For **`.last()`** elements, verify list length first
 - For **negative assertions**, run a positive assertion first
 - Use **`{ log: false }`** with sensitive data in `cy.env()` and `.type()`
+
+## Examples
+
+### Example 1: Writing a new E2E test for a form submission
+
+User says: "Write a Cypress test for the contact form"
+
+```js
+describe('Contact Form', () => {
+  beforeEach(() => {
+    // Arrange
+    cy.intercept('POST', '/api/contact').as('submitContact')
+    cy.visit('/contact')
+  })
+
+  it('submits the form successfully', () => {
+    // Act
+    cy.get('[data-testid="name-input"]')).type('Jane Doe')
+    cy.get('[data-testid="email-input"]').type('jane@example.com')
+    cy.contains('button', 'Submit').click()
+
+    // Assert
+    cy.wait('@submitContact').its('response.statusCode').should('equal', 200)
+    cy.contains('h1', 'Thank you').should('be.visible')
+  })
+})
+```
+
+### Example 2: Fixing a flaky test that uses cy.wait(3000)
+
+User says: "This test is flaky, it sometimes fails, while sometimes it passes"
+
+Before (flaky):
+```js
+cy.get('[data-testid="save-btn"]').click()
+cy.wait(3000)
+cy.contains('.toast', 'Saved').should('be.visible')
+```
+
+After (deterministic):
+```js
+cy.intercept('PUT', '/api/save').as('save')
+cy.get('[data-testid="save-btn"]').click()
+cy.wait('@save')
+cy.contains('.toast', 'Saved').should('be.visible')
+```
+
+### Example 3: Authenticated E2E test
+
+User says: "Write a test that requires login"
+
+```js
+describe('Dashboard', () => {
+  beforeEach(() => {
+    cy.sessionLogin()
+    cy.visit('/dashboard')
+  })
+
+  it('displays the welcome message', () => {
+    cy.contains('h1', 'Welcome').should('be.visible')
+  })
+})
+```
+
+### Example 4: Component test with cy.mount
+
+User says: "Write a component test for the Greeting component"
+
+```js
+import React from 'react'
+import { Greeting } from './Greeting'
+
+describe('<Greeting />', () => {
+  it('renders the greeting text', () => {
+    // Arrange
+    cy.mount(<Greeting name="Alice" />)
+
+    // Assert
+    cy.contains('p', 'Hello, Alice!').should('be.visible')
+  })
+
+  context('when no name is provided', () => {
+    it('renders a default greeting', () => {
+      // Arrange
+      cy.mount(<Greeting />)
+
+      // Assert
+      cy.contains('p', 'Hi, there!').should('be.visible')
+    })
+  })
+})
+```
+
+## Troubleshooting
+
+### Test passes locally but fails in CI
+
+Likely causes: arbitrary wait, viewport difference, or missing intercept. Replace any `cy.wait(Number)` with `cy.intercept()` + `cy.wait('@alias')`. Check that the CI viewport matches expectations.
+
+### Negative assertion passes when it shouldn't
+
+A `should('not.exist')` assertion passes immediately if the page hasn't finished loading. Always run a positive assertion first to confirm you're in the expected state before asserting something is absent.
+
+### Session not restored across specs
+
+Ensure `cacheAcrossSpecs: true` is set in the `cy.session()` options and the session ID is consistent (typically the username).
+
+### Component test fails with "cannot find module"
+
+Ensure the component import path is relative to the spec file. Component specs live alongside the component source (e.g., `src/components/Foo/Foo.cy.tsx` imports `./Foo`).
 EOF
 # Version and commit all the files and directories
 git add .
 git commit -m "Create cypress project"
 # Open the project on VSCode
 code .
+
