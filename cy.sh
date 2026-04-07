@@ -1400,7 +1400,7 @@ describe('Contact Form', () => {
 
   it('submits the form successfully', () => {
     // Act
-    cy.get('[data-testid="name-input"]')).type('Jane Doe')
+    cy.get('[data-testid="name-input"]').type('Jane Doe')
     cy.get('[data-testid="email-input"]').type('jane@example.com')
     cy.contains('button', 'Submit').click()
 
