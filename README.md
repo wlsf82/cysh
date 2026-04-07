@@ -13,8 +13,9 @@ This project offers a single shell script that quickly initializes a [Cypress](h
 2. Give execution permission to the `cy.sh` file (e.g., `chmod +x cy.sh`)
 
 3. In the root directory, run `./cy.sh name-of-the-project-you-want-to-create` to create a Cypress project from scratch
-  2.1. Alternatively, you can run `./cy.sh name-of-your-project-here x.x.x` (where `x.x.x` is the specific Cypress version you want to install). Otherwise, the latest version is installed.
-  2.2. Optionally, pass a third argument with your GitHub username to set the remote origin and README badge. If omitted, it defaults to `wlsf82`.
+
+- 3.1. Alternatively, you can run `./cy.sh name-of-your-project-here x.x.x` (where `x.x.x` is the specific Cypress version you want to install). Otherwise, the latest version is installed.
+- 3.2. Optionally, pass a third argument with your GitHub username to set the remote origin and README badge. If omitted, it defaults to `wlsf82`.
 
 Examples:
 
@@ -32,7 +33,7 @@ Examples:
 ./cy.sh my-repo 15.8.1 my-gh-user
 ```
 
-3. After the script is executed, access the newly created project and start working on it.
+4. After the script is executed, access the newly created project and start working on it.
 
 ## What does `cy.sh` do?
 
