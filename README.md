@@ -40,7 +40,23 @@ Examples:
 
 ## What does `cy.sh` do?
 
-To understand exactly what it does, read the comments in the [`cy.sh`](./cy.sh) file.
+- Creates the project directory and accesses it
+- Initializes git and creates a `.gitignore` file with common Cypress exclusions
+- Links the local repository with a remote GitHub repository
+- Creates a `README.md` file with a GitHub Actions CI badge
+- Initializes npm with a `package.json` file including Cypress scripts
+- Adds an MIT license file with the current year
+- Installs Cypress (specific version if provided, otherwise the latest)
+- Creates `cypress.env.json` and `cypress.env.example.json` files
+- Creates a `cypress.config.js` file with basic E2E test configuration
+- Creates a sample test file (`cypress/e2e/spec.cy.js`) with a test suite skeleton
+- Creates a GitHub Actions workflow (`.github/workflows/ci.yml`) to run tests on push
+- Creates comprehensive Copilot instructions for Cypress testing:
+  - Main instructions file (`.github/copilot-instructions.md`)
+  - Topic-based guides covering project structure, test organization, authentication, selectors, commands, assertions, code quality, and component testing
+  - A Cypress automation skill file (`SKILL.md`) for quick reference
+- Commits all files with "Create cypress project" message
+- Opens the project in VS Code
 
 ## Support this project
 
