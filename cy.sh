@@ -1498,4 +1498,3 @@ git add .
 git commit -m "Create cypress project"
 # Open the project on VSCode
 code .
-
