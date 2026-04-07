@@ -1,4 +1,5 @@
 # Create the project directory and access it
+mkdir -p workspaces/
 mkdir workspaces/$1
 cd workspaces/$1
 # Initialize git and .gitignore
